@@ -1,7 +1,9 @@
 const router = require('express').Router()
 
 router.get('/', (req, res, next) => {
-  // DO YOUR MAGIC
+  res.send(`
+  <h1>its wriggling~</h1>
+  `)
 })
 
 router.get('/:id', (req, res, next) => {
