@@ -28,8 +28,10 @@ const getById = (id) => {
 
 async function create (account) {
   // INSERT into accounts (name, budget) VALUES ('biggy', 999);
-  const result = await db('account').insert(account);
-  console.log(result);
+  // we always get an array with an id with sqlight
+  // we await for the account and destructure the id, pass it to getById
+  const [id] = await db('accounts').insert(account);
+  return getById(id);
 }
 
 const updateById = (id, account) => {

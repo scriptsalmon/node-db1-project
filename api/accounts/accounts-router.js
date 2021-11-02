@@ -23,7 +23,8 @@ router.post('/',
   mw.checkAccountNameUnique,
   async (req, res, next) => {
     try {
-        res.status(201).json(req.body)
+      const newAccount = await Accounts.create(req.body)
+        res.status(201).json(newAccount)
     } catch (err) {
       next(err);
     }
