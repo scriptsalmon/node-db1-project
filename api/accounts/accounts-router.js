@@ -19,17 +19,11 @@ router.get('/:id',
 })
 
 router.post('/',
-  mw.checkAccountId,
   mw.checkAccountPayload,
   mw.checkAccountNameUnique,
   async (req, res, next) => {
     try {
-      const result = await Accounts.create(req.body);
-      if(!req.body.name || !req.body.budget){
-        next({ status: 400, message: 'name and budget must be included' })
-      } else {
         res.status(201).json(req.body)
-    }
     } catch (err) {
       next(err);
     }
