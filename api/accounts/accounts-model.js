@@ -26,9 +26,10 @@ const getById = (id) => {
   return db('accounts').where({ id }).first();
 }
 
-
-const create = account => {
-  return 'get wired'
+async function create (account) {
+  // INSERT into accounts (name, budget) VALUES ('biggy', 999);
+  const result = await db('account').insert(account);
+  console.log(result);
 }
 
 const updateById = (id, account) => {

@@ -1,7 +1,9 @@
 const router = require('express').Router()
 const Accounts = require('./accounts-model');
+const mw = require('./accounts-middleware');
 
-router.get('/', async (req, res, next) => {
+router.get('/',
+ async (req, res, next) => {
   try{
     const data = await Accounts.getAll();
     res.json(data);
@@ -10,31 +12,48 @@ router.get('/', async (req, res, next) => {
   }
 })
 
-router.get('/:id', async (req, res, next) => {
-  try {
-    const validId = await Accounts.getById(req.params.id);
-    if(validId){
-      res.json(validId);
-    } else {
-      // res.status(404).json({ message: 'id does not exist' })
-      // next();
-      next({ status: 404, message: 'account not found' })
+router.get('/:id', 
+  mw.checkAccountId, 
+  async (req, res, next) => {
+    res.json(req.account);
+})
+
+router.post('/',
+  mw.checkAccountId,
+  mw.checkAccountPayload,
+  mw.checkAccountNameUnique,
+  async (req, res, next) => {
+    try {
+      const result = await Accounts.create(req.body);
+      if(!req.body.name || !req.body.budget){
+        next({ status: 400, message: 'name and budget must be included' })
+      } else {
+        res.status(201).json(req.body)
     }
+    } catch (err) {
+      next(err);
+    }
+})
+
+router.put('/:id',
+  mw.checkAccountPayload,
+  mw.checkAccountNameUnique, 
+  async (req, res, next) => {
+    try {
+      res.json('update')
+    } catch (err) {
+      next(err);
+    }
+});
+
+router.delete('/:id', 
+  mw.checkAccountId, 
+  async (req, res, next) => {
+  try {
+    res.json('delete')
   } catch (err) {
     next(err);
   }
-})
-
-router.post('/', (req, res, next) => {
-  // DO YOUR MAGIC
-})
-
-router.put('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
-});
-
-router.delete('/:id', (req, res, next) => {
-  // DO YOUR MAGIC
 })
 
 router.use((err, req, res, next) => { // eslint-disable-line
