@@ -31,6 +31,7 @@ router.post('/',
 })
 
 router.put('/:id',
+  mw.checkAccountId,
   mw.checkAccountPayload,
   mw.checkAccountNameUnique, 
   async (req, res, next) => {
@@ -45,7 +46,8 @@ router.delete('/:id',
   mw.checkAccountId, 
   async (req, res, next) => {
   try {
-    res.json('delete')
+    await Accounts.deleteById(req.params.id)
+    res.json(req.account);
   } catch (err) {
     next(err);
   }

@@ -39,7 +39,7 @@ const updateById = (id, account) => {
 }
 
 const deleteById = id => {
-  return 'get wired'
+  return db('accounts').where('id', id).del()
 }
 
 module.exports = {
